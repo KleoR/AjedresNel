@@ -26,6 +26,7 @@ public class MenuController {
                     System.out.println("En proceso");
                     break;
                 case EXIT:
+                    System.out.println("Saliendo del Juego...");
                     System.exit(0);
             }
         }
@@ -46,7 +47,7 @@ public class MenuController {
                 case SAVE_GAME:
                     break;
                 case EXIT:
-                    break;
+                    return;
             }
         }
     }

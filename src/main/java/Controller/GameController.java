@@ -1,12 +1,13 @@
 package Controller;
 
-import Model.Board;
 import Model.Enum.Column;
 import Model.Enum.Row;
 import Model.Game;
 import Model.Piece;
 import Model.Square;
 import View.ConsoleView;
+
+import java.util.ArrayList;
 
 public class GameController {
     private final ConsoleView view;
@@ -18,7 +19,7 @@ public class GameController {
         this.menu = menu;
     }
 
-    public void showBoard(){
+    public void showBoard() {
         view.showBoard(this.game.getBoard());
         view.showTurn(game.getTurn());
     }
@@ -37,7 +38,7 @@ public class GameController {
             return;
         }
 
-        if(game.getTurn() != originPiece.getColor()){
+        if (game.getTurn() != originPiece.getColor()) {
             view.showError("No puedes mover una pieza enemiga.");
             return;
         }
@@ -45,16 +46,16 @@ public class GameController {
         Square destinationSquare = squareFromString(view.readDestinationSquare());
         Piece destinationPiece = destinationSquare.getPiece();
 
-        if(originSquare == destinationSquare){
+        if (originSquare == destinationSquare) {
             view.showError("La casilla de destino es la misma que la de origen. Vuelva a introducir las casillas.");
             return;
         }
 
-        if (destinationPiece != null) {
-            if (originPiece.getColor() == destinationPiece.getColor()) {
-                view.showError("Ya hay una pieza aliada en esa casilla");
-                return;
-            }
+        ArrayList<Square> legalMoves = originPiece.getValidMovements();
+
+        if (!legalMoves.contains(destinationSquare)) {
+            view.showError("No es un movimiento legal.");
+            return;
         }
 
         destinationSquare.setPiece(originPiece);
@@ -63,7 +64,6 @@ public class GameController {
         game.passTurn();
     }
 
-    
 
     public Square squareFromString(String square) {
         char column = square.charAt(0);

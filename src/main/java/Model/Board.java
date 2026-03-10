@@ -7,43 +7,35 @@ public class Board {
     Square[][] squares = new Square[8][8];
 
     public Board() {
-        for(int col = 0; col < 8; col++){
-            for (int row = 0; row < 8; row++)squares[col][row] = new Square(col, row);
-        }
-
+        for (int col = 0; col < 8; col++) for (int row = 0; row < 8; row++) squares[col][row] = new Square(col, row);
         setupPieces();
     }
 
-    public Square getSquare(int col, int row){
+    public Square getSquare(int col, int row) {
         return squares[col][row];
     }
 
-    public void setupPieces(){
-        squares[0][0].setPiece(new Rook(Color.White));
-        squares[1][0].setPiece(new Knight(Color.White));
-        squares[2][0].setPiece(new Bishop(Color.White));
-        squares[3][0].setPiece(new Queen(Color.White));
-        squares[4][0].setPiece(new King(Color.White));
-        squares[5][0].setPiece(new Bishop(Color.White));
-        squares[6][0].setPiece(new Knight(Color.White));
-        squares[7][0].setPiece(new Rook(Color.White));
+    public void setupPieces() {
+        squares[0][0].setPiece(new Rook(Color.White, this));
+        squares[1][0].setPiece(new Knight(Color.White, this));
+        squares[2][0].setPiece(new Bishop(Color.White, this));
+        squares[3][0].setPiece(new Queen(Color.White, this));
+        squares[4][0].setPiece(new King(Color.White, this));
+        squares[5][0].setPiece(new Bishop(Color.White, this));
+        squares[6][0].setPiece(new Knight(Color.White, this));
+        squares[7][0].setPiece(new Rook(Color.White, this));
 
-        for (int i = 0; i < 8; i++){
-            squares[i][1].setPiece(new Pawn(Color.White));
-        }
+        for (int i = 0; i < 8; i++) squares[i][1].setPiece(new Pawn(Color.White, this));
 
-        squares[0][7].setPiece(new Rook(Color.Black));
-        squares[1][7].setPiece(new Knight(Color.Black));
-        squares[2][7].setPiece(new Bishop(Color.Black));
-        squares[3][7].setPiece(new Queen(Color.Black));
-        squares[4][7].setPiece(new King(Color.Black));
-        squares[5][7].setPiece(new Bishop(Color.Black));
-        squares[6][7].setPiece(new Knight(Color.Black));
-        squares[7][7].setPiece(new Rook(Color.Black));
+        squares[0][7].setPiece(new Rook(Color.Black, this));
+        squares[1][7].setPiece(new Knight(Color.Black, this));
+        squares[2][7].setPiece(new Bishop(Color.Black, this));
+        squares[3][7].setPiece(new Queen(Color.Black, this));
+        squares[4][7].setPiece(new King(Color.Black, this));
+        squares[5][7].setPiece(new Bishop(Color.Black, this));
+        squares[6][7].setPiece(new Knight(Color.Black, this));
+        squares[7][7].setPiece(new Rook(Color.Black, this));
 
-        for (int i = 0; i < 8; i++){
-            squares[i][6].setPiece(new Pawn(Color.Black));
-        }
-
+        for (int i = 0; i < 8; i++) squares[i][6].setPiece(new Pawn(Color.Black, this));
     }
 }

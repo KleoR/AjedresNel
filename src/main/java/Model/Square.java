@@ -21,11 +21,21 @@ public class Square {
     }
 
     public void setPiece(Piece piece) {
+        if (this.piece != null) this.piece.setSquare(null);
         this.piece = piece;
+        if (piece != null) piece.setSquare(this);
     }
 
-    private String squareColor(){
-        if(this.color == Color.White) return "▓";
+    public int getColumnFromIndex(){
+        return col.getIndex();
+    }
+
+    public int getRowFromIndex(){
+        return row.getIndex();
+    }
+
+    private String squareColor() {
+        if (this.color == Color.White) return "▓";
         else return "░";
     }
 

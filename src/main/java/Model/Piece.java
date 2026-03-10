@@ -7,13 +7,24 @@ import java.util.ArrayList;
 
 public abstract class Piece {
     private Color color;
+    protected Board board;
+    private Square square;
 
-    public Piece(Color color) {
+    public Piece(Color color, Board board) {
         this.color = color;
+        this.board = board;
     }
 
     public Color getColor() {
         return color;
+    }
+
+    public void setSquare(Square square) {
+        this.square = square;
+    }
+
+    public Square getSquare() {
+        return square;
     }
 
     public abstract PieceType getType();
