@@ -25,25 +25,45 @@ public class Pawn extends Piece {
 
         ArrayList<Square> validMoves = new ArrayList<>();
         int forward = super.getColor() == Color.White ? 1 : -1;
-        int starRow = super.getColor() == Color.White ? 1 : 6;
+        int startRow = super.getColor() == Color.White ? 1 : 6;
         int col = square.getColumnFromIndex();
         int row = square.getRowFromIndex();
 
+        addForwardMoves(row, forward, col, validMoves, startRow);
+        addDiagonalCaptures(row, forward, col, validMoves);
 
+        return validMoves;
+    }
+
+    private void addDiagonalCaptures(int row, int forward, int col, ArrayList<Square> validMoves) {
+        // una casilla diagonal
+        int r1 = row + forward;
+        for (int dCol : new int[]{-1, 1}) {
+            int colDest = col + dCol;
+            if (withinLimits(colDest, r1)) {
+                Square squareDest = this.board.getSquare(colDest, r1);
+                if (squareDest.getPiece() != null && squareDest.getPiece().getColor() != super.getColor()) {
+                    validMoves.add(squareDest);
+                }
+            }
+        }
+    }
+
+    private void addForwardMoves(int row, int forward, int col, ArrayList<Square> validMoves, int startRow) {
         // una casilla adelante
         int r1 = row + forward;
+        if (!withinLimits(col, r1)) return;
         Square s1 = this.board.getSquare(col, r1);
         if (s1.getPiece() == null) {
             validMoves.add(s1);
-            if (row == starRow) {
+
+            // dos casillas adelante
+            if (row == startRow) {
                 int r2 = row + forward * 2;
                 Square s2 = this.board.getSquare(col, r2);
                 if (s2.getPiece() == null) validMoves.add(s2);
             }
         }
-
-
-        return validMoves;
     }
 
 

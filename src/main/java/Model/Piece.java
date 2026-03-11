@@ -31,6 +31,10 @@ public abstract class Piece {
 
     public abstract ArrayList<Square> getValidMovements();
 
+    protected boolean withinLimits(int colIndex, int rowIndex){
+        return colIndex >= 0 && colIndex <= 7 && rowIndex >= 0 && rowIndex <= 7;
+    }
+
     @Override
     public String toString() {
         return "" + getType().getSymbol(this.color);

@@ -21,7 +21,7 @@ public class Square {
     }
 
     public void setPiece(Piece piece) {
-        if (this.piece != null) this.piece.setSquare(null);
+        if (this.piece != null && piece != null && piece != this.piece) this.piece.setSquare(null); //Todo Pendiente de entender, pero funcionar funciona
         this.piece = piece;
         if (piece != null) piece.setSquare(this);
     }
