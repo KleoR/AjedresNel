@@ -20,8 +20,8 @@ public class GameController {
     }
 
     public void showBoard() {
-        view.showBoard(this.game.getBoard());
         view.showTurn(game.getTurn());
+        view.showBoard(this.game.getBoard());
     }
 
     public void createNewGame() {

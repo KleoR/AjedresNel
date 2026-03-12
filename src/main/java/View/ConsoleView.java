@@ -9,33 +9,42 @@ public class ConsoleView {
     private final Scanner sc = new Scanner(System.in);
 
     public void showBoard(Board b) {
+        System.out.println("\n    ◇  ┯━┯━┯━┯━┯━┯━┯  ◇");
+
         for (int row = 7; row >= 0; row--) {
-            for (int col = 0; col < 8; col++) System.out.print(b.getSquare(col, row) + " ");
-            System.out.println();
+            System.out.print("  " + (row + 1) + (row != 7 && row != 0 ? " ┃" : "   "));
+            columnDraw(b, row);
         }
+        System.out.println("       a   b   c   d   e   f   g   h\n");
     }
 
-    public void showTurn(Color color){
-        if(color == Color.White) System.out.println("TURNO: BLANCO");
-        else System.out.println("TURNO: NEGRO");
+    public void columnDraw(Board b, int row) {
+        for (int col = 0; col < 8; col++) {
+            String piece = b.getSquare(col, row).toString();
+            System.out.print(piece + (col != 7 ? "│" : ""));
+        }
+
+        if (row != 0) System.out.println((row != 7 ? "┃ " : "") + "\n    ┠─┼─┼─┼─┼─┼─┼─┼─┨");
+        else System.out.println("\n    ◇  ┷━┷━┷━┷━┷━┷━┷  ◇");
+    }
+
+    public void showTurn(Color color) {
+        if (color == Color.White) System.out.println("\n ⌜ ── ◇ ── TURNO: ♔ BLANCO ── ◇ ── ⌟");
+        else System.out.println("\n ⌜ ── ◇ ── TURNO: ♚ NEGRO ── ◇ ── ⌟");
+        //"◇ ─────────────────── ◇"
     }
 
     public void showTitle() {
-        System.out.println("""
-                ░█████╗░██╗░░██╗███████╗░██████╗░██████╗
-                ██╔══██╗██║░░██║██╔════╝██╔════╝██╔════╝
-                ██║░░╚═╝███████║█████╗░░╚█████╗░╚█████╗░
-                ██║░░██╗██╔══██║██╔══╝░░░╚═══██╗░╚═══██╗
-                ╚█████╔╝██║░░██║███████╗██████╔╝██████╔╝
-                ░╚════╝░╚═╝░░╚═╝╚══════╝╚═════╝░╚═════╝░""");
+        System.out.println(""" 
+                TITULO""");
     }
 
     public void showMainMenu() {
-        System.out.println("\n⌜1⌟ CREAR PARTIDA ── ◇ ── ⌜2⌟ CARGAR PARTIDA ── ◇ ── ⌜0⌟ SALIR \n >> ");
+        System.out.print("\n ⌜◇ ─ [1] CREAR PARTIDA ── [2] CARGAR PARTIDA ── [0] SALIR ─ ◇ \n >> ");
     }
 
     public void showGameMenu() {
-        System.out.println("\n⌜1⌟ MOVER PIEZA ── ◇ ── ⌜2⌟ RENDIRSE ── ◇ ── ⌜3⌟ TABLAS ── ◇ ── ⌜0⌟ SALIR \n >> ");
+        System.out.print("\n ◇ ─ [1] MOVER PIEZA ── [2] RENDIRSE ── [3] TABLAS ── [0] SALIR ─ ◇ \n >> ");
     }
 
     public void showError(String mjs) {
@@ -43,7 +52,7 @@ public class ConsoleView {
     }
 
     public String readOriginSquare() {
-        System.out.print(">> Escribe la casilla de origen: ");
+        System.out.print("\n >> Escribe la casilla de origen: ");
         return readSquare();
     }
 

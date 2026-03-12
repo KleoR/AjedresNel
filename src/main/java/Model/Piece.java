@@ -6,7 +6,7 @@ import Model.Pieces.PieceType;
 import java.util.ArrayList;
 
 public abstract class Piece {
-    private Color color;
+    private final Color color;
     protected Board board;
     private Square square;
 
