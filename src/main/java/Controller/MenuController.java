@@ -17,7 +17,7 @@ public class MenuController {
         view.showTitle();
         while (true){
             view.showMainMenu();
-            switch (MainMenuOption.fromInt(view.readInt(MainMenuOption.values().length))){
+            switch (MainMenuOption.getMainMenuOption(view)){
                 case CREATE_GAME:
                     gameController.createNewGame();
                     showGameMenu();
@@ -35,10 +35,11 @@ public class MenuController {
     public void showGameMenu(){
         while (true){
             view.showGameMenu();
-            switch (GameMenuOption.gameOptionFromIndex(view.readInt(GameMenuOption.values().length))){
+            switch (GameMenuOption.getGameMenuOption(view)){
                 case MOVE_PIECE:
-                    gameController.movePiece();
-                    gameController.showBoard();
+                    while (gameController.movePiece()){
+                        gameController.showBoard();
+                    }
                     break;
                 case RESIGN:
                     break;

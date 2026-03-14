@@ -40,7 +40,7 @@ public class ConsoleView {
     }
 
     public void showMainMenu() {
-        System.out.print("\n ⌜◇ ─ [1] CREAR PARTIDA ── [2] CARGAR PARTIDA ── [0] SALIR ─ ◇ \n >> ");
+        System.out.print("\n ◇ ─ [1] CREAR PARTIDA ── [2] CARGAR PARTIDA ── [0] SALIR ─ ◇ \n >> ");
     }
 
     public void showGameMenu() {
@@ -48,11 +48,15 @@ public class ConsoleView {
     }
 
     public void showError(String mjs) {
-        System.out.println("[!] ERROR: " + mjs + "\n");
+        System.out.println(" ERROR: " + mjs + "\n");
     }
 
     public String readOriginSquare() {
-        System.out.print("\n >> Escribe la casilla de origen: ");
+        System.out.print("""
+                
+                [!] Escribe [ MENU ] para volver al menú.
+                
+                >> Escribe la casilla de origen:\s""");
         return readSquare();
     }
 
@@ -64,8 +68,10 @@ public class ConsoleView {
     public String readSquare() {
         while (true) {
             String square = sc.nextLine().toUpperCase().trim();
+            if (square.equals("MENU")) return square;
+
             if (square.matches("^[A-H][1-8]$")) return square;
-            showError("Casilla invalida. Vuelve a introducir la casilla.");
+            showError("Casilla invalida. Vuelve a introducir la casilla. Escribe MENU para volver al menú.");
         }
     }
 

@@ -1,5 +1,7 @@
 package Controller.Enum;
 
+import View.ConsoleView;
+
 public enum MainMenuOption {
     CREATE_GAME(1),
     LOAD_GAME(2),
@@ -9,6 +11,10 @@ public enum MainMenuOption {
 
     MainMenuOption(int index) {
         this.index = index;
+    }
+
+    public static MainMenuOption getMainMenuOption(ConsoleView view){
+        return MainMenuOption.fromInt(view.readInt(MainMenuOption.values().length));
     }
 
     public static MainMenuOption fromInt(int index) {

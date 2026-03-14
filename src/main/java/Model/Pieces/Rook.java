@@ -2,12 +2,8 @@ package Model.Pieces;
 
 import Model.Board;
 import Model.Enum.Color;
-import Model.Piece;
-import Model.Square;
 
-import java.util.ArrayList;
-
-public class Rook extends Piece {
+public class Rook extends SlidingPiece {
 
     public Rook(Color color, Board board) {
         super(color, board);
@@ -19,7 +15,7 @@ public class Rook extends Piece {
     }
 
     @Override
-    public ArrayList<Square> getValidMovements() {
-        return null;
+    protected int[][] getDirections() {
+        return new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     }
 }

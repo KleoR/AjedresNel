@@ -29,18 +29,21 @@ public class GameController {
         showBoard();
     }
 
-    public void movePiece() {
-        Square originSquare = squareFromString(view.readOriginSquare());
+    public boolean movePiece() {
+        String s = view.readOriginSquare();
+        if (s.equals("MENU")) return false;
+
+        Square originSquare = squareFromString(s);
         Piece originPiece = originSquare.getPiece();
 
         if (originPiece == null) {
             view.showError("No hay hay que mover.");
-            return;
+            return true;
         }
 
         if (game.getTurn() != originPiece.getColor()) {
             view.showError("No puedes mover una pieza enemiga.");
-            return;
+            return true;
         }
 
         Square destinationSquare = squareFromString(view.readDestinationSquare());
@@ -48,20 +51,21 @@ public class GameController {
 
         if (originSquare == destinationSquare) {
             view.showError("La casilla de destino es la misma que la de origen. Vuelva a introducir las casillas.");
-            return;
+            return true;
         }
 
         ArrayList<Square> legalMoves = originPiece.getValidMovements();
 
         if (!legalMoves.contains(destinationSquare)) {
             view.showError("No es un movimiento legal.");
-            return;
+            return true;
         }
 
         destinationSquare.setPiece(originPiece);
         originSquare.setPiece(null);
 
         game.passTurn();
+        return true;
     }
 
 

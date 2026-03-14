@@ -1,6 +1,7 @@
 package Controller.Enum;
 
 import Model.Enum.Column;
+import View.ConsoleView;
 
 public enum GameMenuOption {
     MOVE_PIECE(1),
@@ -13,6 +14,10 @@ public enum GameMenuOption {
 
     GameMenuOption(int index) {
         this.index = index;
+    }
+
+    public static GameMenuOption getGameMenuOption(ConsoleView view){
+        return GameMenuOption.gameOptionFromIndex(view.readInt(MainMenuOption.values().length));
     }
 
     public static GameMenuOption gameOptionFromIndex(int index) {
