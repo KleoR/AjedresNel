@@ -46,6 +46,7 @@ public class MenuController {
                 case DRAW:
                     break;
                 case SAVE_GAME:
+                    gameController.saveGame();
                     break;
                 case EXIT:
                     return;

@@ -14,6 +14,10 @@ public class Game {
         this.turn = Color.White;
     }
 
+    public GameStatus getStatus() {
+        return status;
+    }
+
     public Board getBoard() {
         return board;
     }

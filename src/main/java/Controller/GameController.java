@@ -7,6 +7,7 @@ import Model.Piece;
 import Model.Square;
 import View.ConsoleView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class GameController {
@@ -26,6 +27,11 @@ public class GameController {
 
     public void createNewGame() {
         this.game = new Game();
+        try {
+            GamePersistant.save(this.game, "PartidaPrueba");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         showBoard();
     }
 
@@ -79,5 +85,25 @@ public class GameController {
         return game.getBoard().getSquare(col, row);
     }
 
+    public void saveGame() {
+        if (game == null) {
+            view.showError("No hay ninguna partida que guardar.");
+            return;
+        }
+
+        String fileName = view.readFileName();
+
+        if(GamePersistant.gameExist(fileName)) {
+            view.showError("El nombre ya existe.");
+            return;
+        }
+
+        try {
+            GamePersistant.save(game,fileName);
+            view.showSuccess("Partida [" + fileName + "] guardad correctamente.");
+        } catch (IOException e) {
+            view.showError("Error al guardar la partida");
+        }
+    }
 
 }

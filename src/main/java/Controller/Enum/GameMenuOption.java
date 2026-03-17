@@ -17,11 +17,11 @@ public enum GameMenuOption {
     }
 
     public static GameMenuOption getGameMenuOption(ConsoleView view){
-        return GameMenuOption.gameOptionFromIndex(view.readInt(MainMenuOption.values().length));
+        return GameMenuOption.gameOptionFromIndex(view.readInt(GameMenuOption.values().length));
     }
 
     public static GameMenuOption gameOptionFromIndex(int index) {
         for (GameMenuOption gm : values()) if (gm.index == index) return gm;
-        throw new IllegalArgumentException("Opcion Invalida");
+        throw new IllegalArgumentException("Opción Invalida");
     }
 }

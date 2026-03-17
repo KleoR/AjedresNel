@@ -44,11 +44,15 @@ public class ConsoleView {
     }
 
     public void showGameMenu() {
-        System.out.print("\n ◇ ─ [1] MOVER PIEZA ── [2] RENDIRSE ── [3] TABLAS ── [0] SALIR ─ ◇ \n >> ");
+        System.out.print("\n ◇ ─ [1] MOVER PIEZA ── [2] RENDIRSE ── [3] TABLAS ── [4] GUARDAR PARTIDA ── [0] SALIR ─ ◇ \n >> ");
     }
 
     public void showError(String mjs) {
         System.out.println(" ERROR: " + mjs + "\n");
+    }
+
+    public void showSuccess(String mjs) {
+        System.out.println(" SUCCESS: " + mjs + "\n");
     }
 
     public String readOriginSquare() {
@@ -86,6 +90,16 @@ public class ConsoleView {
                 if (num >= 0 && num <= max) return num;
                 else showError("Numero fuera de rango. Vuelve a introducir un numero.");
             }
+        }
+    }
+
+    public String readFileName(){
+        while (true){
+            System.out.println("Escribe le nombre para el fichero de la partida: ");
+            String gameName = sc.nextLine().trim();
+
+            if (gameName.matches("^[A-Za-z0-9_-]{1,20}$")) return gameName;
+            else showError("Formato de nombre no valido. Vuelva a introducirlo.");
         }
     }
 }
