@@ -11,7 +11,7 @@ public class Rook extends SlidingPiece {
 
     @Override
     public PieceType getType() {
-        return PieceType.Rook;
+        return PieceType.ROOK;
     }
 
     @Override

@@ -1,12 +1,15 @@
 package Controller;
 
 import Model.Board;
+import Model.Enum.Color;
+import Model.Enum.GameStatus;
 import Model.Game;
 import Model.Piece;
+import Model.Pieces.*;
 import Model.Square;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,11 +43,43 @@ public class GamePersistant {
         }
     }
 
-    public static boolean gameExist(String gameName){
+    public static boolean gameExist(String gameName) {
         Path file = Paths.get("saves", gameName);
         return Files.exists(file);
     }
 
-    public static void load() {
+    public static Game load(String gameName) throws IOException {
+        Path file = Paths.get("saves", gameName);
+
+        try (BufferedReader br = Files.newBufferedReader(file)) {
+            Color turn = Color.valueOf(br.readLine());
+            GameStatus status = GameStatus.valueOf(br.readLine());
+            Board b = new Board(true);
+
+            String line;
+            while ((line = br.readLine()) != null) {
+
+                String[] parts = line.split(" ");
+
+                int col = Integer.parseInt(parts[0]);
+                int row = Integer.parseInt(parts[1]);
+
+                if (parts[2].equals("Empty")) continue;
+
+                PieceType pieceType = PieceType.valueOf(parts[2]);
+                Color pieceColor = Color.valueOf(parts[3]);
+
+                Piece piece = switch (pieceType) {
+                    case PAWN -> new Pawn(pieceColor, b);
+                    case ROOK -> new Rook(pieceColor, b);
+                    case QUEEN -> new Queen(pieceColor, b);
+                    case KING -> new King(pieceColor, b);
+                    case KNIGHT -> new Knight(pieceColor, b);
+                    case BISHOP -> new Bishop(pieceColor, b);
+                };
+                b.getSquare(col, row).setPiece(piece);
+            }
+            return new Game(b, status, turn);
+        }
     }
 }

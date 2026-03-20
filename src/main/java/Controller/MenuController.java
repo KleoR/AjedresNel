@@ -23,11 +23,10 @@ public class MenuController {
                     showGameMenu();
                     break;
                 case LOAD_GAME:
-                    System.out.println("En proceso");
+                    if (gameController.loadGame()) showGameMenu();
                     break;
                 case EXIT:
-                    System.out.println("Saliendo del Juego...");
-                    System.exit(0);
+                    view.showExit();
             }
         }
     }
@@ -42,8 +41,10 @@ public class MenuController {
                     }
                     break;
                 case RESIGN:
+                    //Todo 2
                     break;
                 case DRAW:
+                     //Todo
                     break;
                 case SAVE_GAME:
                     gameController.saveGame();

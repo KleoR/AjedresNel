@@ -10,7 +10,7 @@ public class Queen extends SlidingPiece {
 
     @Override
     public PieceType getType() {
-        return PieceType.Queen;
+        return PieceType.QUEEN;
     }
 
     @Override

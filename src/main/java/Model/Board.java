@@ -6,10 +6,11 @@ import Model.Pieces.*;
 public class Board {
     Square[][] squares = new Square[8][8];
 
-    public Board() {
+    public Board(boolean empty) {
         for (int col = 0; col < 8; col++) for (int row = 0; row < 8; row++) squares[col][row] = new Square(col, row);
-        setupPieces();
+        if (!empty) setupPieces();
     }
+
 
     public Square getSquare(int col, int row) {
         return squares[col][row];

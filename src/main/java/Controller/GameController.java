@@ -27,11 +27,6 @@ public class GameController {
 
     public void createNewGame() {
         this.game = new Game();
-        try {
-            GamePersistant.save(this.game, "PartidaPrueba");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         showBoard();
     }
 
@@ -53,7 +48,6 @@ public class GameController {
         }
 
         Square destinationSquare = squareFromString(view.readDestinationSquare());
-        Piece destinationPiece = destinationSquare.getPiece();
 
         if (originSquare == destinationSquare) {
             view.showError("La casilla de destino es la misma que la de origen. Vuelva a introducir las casillas.");
@@ -93,16 +87,38 @@ public class GameController {
 
         String fileName = view.readFileName();
 
-        if(GamePersistant.gameExist(fileName)) {
-            view.showError("El nombre ya existe.");
-            return;
+        if (GamePersistant.gameExist(fileName)) {
+            if (view.confirmOverwriteFile()) view.showInfo("El archivo [ " + fileName + " ] sera sobrescrito");
+            else {
+                view.showInfo("Vuelve a guardar con otro nombre.");
+                return;
+            }
         }
 
         try {
-            GamePersistant.save(game,fileName);
-            view.showSuccess("Partida [" + fileName + "] guardad correctamente.");
+            GamePersistant.save(game, fileName);
+            view.showSuccess("Partida [ " + fileName + " ] guardad correctamente.");
         } catch (IOException e) {
             view.showError("Error al guardar la partida");
+        }
+    }
+
+    public boolean loadGame() {
+        String fileName = view.readFileName();
+
+        if (!GamePersistant.gameExist(fileName)) {
+            view.showError("No existe ningún juego con el nombre [ " + fileName + " ].");
+            return false;
+        }
+
+        try {
+            this.game = GamePersistant.load(fileName);
+            view.showSuccess("La partida [ " + fileName + " ] ha sido cargada con éxito.");
+            showBoard();
+            return true;
+        } catch (IOException e) {
+            view.showError("Error al cargar la partida");
+            return false;
         }
     }
 

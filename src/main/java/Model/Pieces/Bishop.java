@@ -10,7 +10,7 @@ public class Bishop extends SlidingPiece {
 
     @Override
     public PieceType getType() {
-        return PieceType.Bishop;
+        return PieceType.BISHOP;
     }
 
     @Override
