@@ -6,18 +6,18 @@ import View.ConsoleView;
 
 public class MenuController {
     private final ConsoleView view;
-    private GameController gameController;
+    private final GameController gameController;
 
     public MenuController() {
         this.view = new ConsoleView();
-        this.gameController = new GameController(this.view, this);
+        this.gameController = new GameController(this.view);
     }
 
-    public void showMainMenu(){
+    public void showMainMenu() {
         view.showTitle();
-        while (true){
+        while (true) {
             view.showMainMenu();
-            switch (MainMenuOption.getMainMenuOption(view)){
+            switch (MainMenuOption.getMainMenuOption(view)) {
                 case CREATE_GAME:
                     gameController.createNewGame();
                     showGameMenu();
@@ -27,16 +27,17 @@ public class MenuController {
                     break;
                 case EXIT:
                     view.showExit();
+                    System.exit(0);
             }
         }
     }
 
-    public void showGameMenu(){
-        while (true){
+    public void showGameMenu() {
+        while (true) {
             view.showGameMenu();
-            switch (GameMenuOption.getGameMenuOption(view)){
+            switch (GameMenuOption.getGameMenuOption(view)) {
                 case MOVE_PIECE:
-                    while (gameController.movePiece()){
+                    while (gameController.movePiece()) {
                         gameController.showBoard();
                     }
                     break;
@@ -44,7 +45,7 @@ public class MenuController {
                     //Todo 2
                     break;
                 case DRAW:
-                     //Todo
+                    //Todo
                     break;
                 case SAVE_GAME:
                     gameController.saveGame();

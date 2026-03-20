@@ -5,9 +5,9 @@ import Model.Enum.Column;
 import Model.Enum.Row;
 
 public class Square {
-    private Column col;
-    private Row row;
-    private Color color;
+    private final Column col;
+    private final Row row;
+    private final Color color;
     private Piece piece;
 
     public Square(int col, int row) {
@@ -21,22 +21,23 @@ public class Square {
     }
 
     public void setPiece(Piece piece) {
-        if (this.piece != null && piece != null && piece != this.piece) this.piece.setSquare(null); //Todo Pendiente de entender, pero funcionar funciona
+        if (this.piece != null && piece != null && piece != this.piece)
+            this.piece.setSquare(null); //Todo Pendiente de entender, pero funcionar funciona
         this.piece = piece;
         if (piece != null) piece.setSquare(this);
     }
 
-    public int getColumnFromIndex(){
+    public int getColumnFromIndex() {
         return col.getIndex();
     }
 
-    public int getRowFromIndex(){
+    public int getRowFromIndex() {
         return row.getIndex();
     }
 
     private String squareColor() {
-        if (this.color == Color.White) return "▓";
-        else return "░";
+        if (this.color == Color.White) return "░";
+        else return "  ";
     }
 
     @Override

@@ -12,12 +12,10 @@ import java.util.ArrayList;
 
 public class GameController {
     private final ConsoleView view;
-    private final MenuController menu;
     private Game game;
 
-    public GameController(ConsoleView view, MenuController menu) {
+    public GameController(ConsoleView view) {
         this.view = view;
-        this.menu = menu;
     }
 
     public void showBoard() {
@@ -87,7 +85,7 @@ public class GameController {
 
         String fileName = view.readFileName();
 
-        if (GamePersistant.gameExist(fileName)) {
+        if (GamePersistent.gameExist(fileName)) {
             if (view.confirmOverwriteFile()) view.showInfo("El archivo [ " + fileName + " ] sera sobrescrito");
             else {
                 view.showInfo("Vuelve a guardar con otro nombre.");
@@ -96,7 +94,7 @@ public class GameController {
         }
 
         try {
-            GamePersistant.save(game, fileName);
+            GamePersistent.save(game, fileName);
             view.showSuccess("Partida [ " + fileName + " ] guardad correctamente.");
         } catch (IOException e) {
             view.showError("Error al guardar la partida");
@@ -106,13 +104,13 @@ public class GameController {
     public boolean loadGame() {
         String fileName = view.readFileName();
 
-        if (!GamePersistant.gameExist(fileName)) {
+        if (!GamePersistent.gameExist(fileName)) {
             view.showError("No existe ningún juego con el nombre [ " + fileName + " ].");
             return false;
         }
 
         try {
-            this.game = GamePersistant.load(fileName);
+            this.game = GamePersistent.load(fileName);
             view.showSuccess("La partida [ " + fileName + " ] ha sido cargada con éxito.");
             showBoard();
             return true;

@@ -10,7 +10,7 @@ public enum Column {
     G(6),
     H(7);
 
-    private int index;
+    private final int index;
 
     Column(int index) {
         this.index = index;
@@ -20,7 +20,7 @@ public enum Column {
         return index;
     }
 
-    public static Column columnFromIndex(int index){
+    public static Column columnFromIndex(int index) {
         for (Column c : values()) if (c.index == index) return c;
         throw new IllegalArgumentException("Indíce no valido.");
     }

@@ -14,7 +14,7 @@ public class Game {
         this.turn = Color.White;
     }
 
-    public Game(Board b, GameStatus gs, Color c){
+    public Game(Board b, GameStatus gs, Color c) {
         this.board = b;
         this.status = gs;
         this.turn = c;
@@ -32,8 +32,8 @@ public class Game {
         return turn;
     }
 
-    public void passTurn(){
-        if(this.turn == Color.White) this.turn = Color.Black;
+    public void passTurn() {
+        if (this.turn == Color.White) this.turn = Color.Black;
         else this.turn = Color.White;
     }
 }

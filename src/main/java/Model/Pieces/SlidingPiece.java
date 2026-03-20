@@ -30,11 +30,11 @@ public abstract class SlidingPiece extends Piece {
         int row = square.getRowFromIndex();
         int col = square.getColumnFromIndex();
 
-        for (int[] d : getDirections() ){
+        for (int[] d : getDirections()) {
             int dCol = col + d[0];
             int dRow = row + d[1];
 
-            while (withinLimits(dCol, dRow)){
+            while (withinLimits(dCol, dRow)) {
                 Square dSquare = board.getSquare(dCol, dRow);
                 if (dSquare.getPiece() == null) validMoves.add(dSquare);
                 else {

@@ -7,13 +7,13 @@ public enum MainMenuOption {
     LOAD_GAME(2),
     EXIT(0);
 
-    private int index;
+    private final int index;
 
     MainMenuOption(int index) {
         this.index = index;
     }
 
-    public static MainMenuOption getMainMenuOption(ConsoleView view){
+    public static MainMenuOption getMainMenuOption(ConsoleView view) {
         return MainMenuOption.fromInt(view.readInt(MainMenuOption.values().length));
     }
 
