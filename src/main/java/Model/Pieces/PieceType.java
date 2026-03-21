@@ -19,7 +19,7 @@ public enum PieceType {
     }
 
     public char getSymbol(Color c) {
-        if (c == Color.White) return whiteSymbol;
+        if (c == Color.WHITE) return whiteSymbol;
         else return blackSymbol;
     }
 }

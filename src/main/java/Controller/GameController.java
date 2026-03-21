@@ -1,6 +1,8 @@
 package Controller;
 
+import Model.Enum.Color;
 import Model.Enum.Column;
+import Model.Enum.GameStatus;
 import Model.Enum.Row;
 import Model.Game;
 import Model.Piece;
@@ -20,6 +22,7 @@ public class GameController {
 
     public void showBoard() {
         view.showTurn(game.getTurn());
+        view.showCapturedPieces(game.getCapturedPieces());
         view.showBoard(this.game.getBoard());
     }
 
@@ -57,6 +60,12 @@ public class GameController {
         if (!legalMoves.contains(destinationSquare)) {
             view.showError("No es un movimiento legal.");
             return true;
+        }
+
+        Piece destPiece = destinationSquare.getPiece();
+
+        if (destPiece != null){
+            game.addCapturedPiece(destPiece);
         }
 
         destinationSquare.setPiece(originPiece);
@@ -119,5 +128,18 @@ public class GameController {
             return false;
         }
     }
+
+    public boolean resignGame() {
+        if (!view.confirmResign()) return false;
+
+        if (game.getTurn() == Color.WHITE) game.setStatus(GameStatus.BLACK_WINS);
+        else game.setStatus(GameStatus.WHITE_WINS);
+
+        view.showInfo("Los " + game.getTurn().name() + " se han rendido.");
+        view.finishGame(game.getStatus());
+
+        return true;
+    }
+
 
 }

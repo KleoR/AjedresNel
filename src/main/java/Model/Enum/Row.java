@@ -1,14 +1,14 @@
 package Model.Enum;
 
 public enum Row {
-    uno(0),
-    dos(1),
-    tres(2),
-    cuatro(3),
-    cinco(4),
-    seis(5),
-    siete(6),
-    ocho(7);
+    ONE(0),
+    TWO(1),
+    THREE(2),
+    FOUR(3),
+    FIVE(4),
+    SIX(5),
+    SEVEN(6),
+    EIGHT(7);
 
     private final int index;
 

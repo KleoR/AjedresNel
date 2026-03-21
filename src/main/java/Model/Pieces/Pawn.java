@@ -24,8 +24,8 @@ public class Pawn extends Piece {
         if (square == null) return new ArrayList<>();
 
         ArrayList<Square> validMoves = new ArrayList<>();
-        int forward = super.getColor() == Color.White ? 1 : -1;
-        int startRow = super.getColor() == Color.White ? 1 : 6;
+        int forward = super.getColor() == Color.WHITE ? 1 : -1;
+        int startRow = super.getColor() == Color.WHITE ? 1 : 6;
         int col = square.getColumnFromIndex();
         int row = square.getRowFromIndex();
 

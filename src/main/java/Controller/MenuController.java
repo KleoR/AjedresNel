@@ -42,7 +42,7 @@ public class MenuController {
                     }
                     break;
                 case RESIGN:
-                    //Todo 2
+                    if (gameController.resignGame()) return;
                     break;
                 case DRAW:
                     //Todo
@@ -52,6 +52,7 @@ public class MenuController {
                     break;
                 case EXIT:
                     return;
+
             }
         }
     }

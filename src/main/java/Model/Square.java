@@ -36,7 +36,7 @@ public class Square {
     }
 
     private String squareColor() {
-        if (this.color == Color.White) return "░";
+        if (this.color == Color.WHITE) return "░";
         else return "  ";
     }
 

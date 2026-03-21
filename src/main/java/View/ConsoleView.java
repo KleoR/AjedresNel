@@ -2,7 +2,10 @@ package View;
 
 import Model.Board;
 import Model.Enum.Color;
+import Model.Enum.GameStatus;
+import Model.Piece;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ConsoleView {
@@ -35,8 +38,7 @@ public class ConsoleView {
 //                          ▒ |  ▒ |▒ \\__▒ |▒ |_____ ▒ |__▒ |▒ |  ▒ |▒ |_____  /▒/____
 //                          ▒/   ▒ / ▒▒▒ / ▒▒▒▒ /▒▒▒ /  ▒ /  ▒/ ▒▒▒▒/  ▒▒▒▒/
 //
-//                ◇ ──────────────── ◇ AJEDREZ V1.0 ◇ ──────────────── ◇
-//                """);
+//                ◇ ──────────────── ◇ AJEDREZ V1.0 ◇ ──────────────── ◇""");
 //        System.out.println("""
 //                ◇ ────────────────────────────────────────── ◇
 //
@@ -48,8 +50,7 @@ public class ConsoleView {
 //                     |▄▀|  |▄▀|  ▔|▄▀▄▀|▔   |▄▀▄▀▄▀|  |▄▀▄▀▄▀|▔   |▄▀|  |▄▀|  |▄▀▄▀▄▀| |▄▀▄▀▄▀▄▀▄|
 //                      ▔▔    ▔▔     ▔▔▔▔      ▔▔▔▔▔▔    ▔▔▔▔▔▔      ▔▔    ▔▔    ▔▔▔▔▔▔   ▔▔▔▔▔▔▔▔▔
 //
-//                ◇ ──────────────── ◇ AJEDREZ V1.0 ◇ ──────────────── ◇
-//                """);
+//                ◇ ──────────────── ◇ AJEDREZ V1.0 ◇ ──────────────── ◇""");
 //    }
 
     public void showBoard(Board b) {
@@ -75,7 +76,7 @@ public class ConsoleView {
     }
 
     public void showTurn(Color color) {
-        if (color == Color.White) System.out.println("\n                      ⌜ ── ◇ ── TURNO: ♔ BLANCO ── ◇ ── ⌟");
+        if (color == Color.WHITE) System.out.println("\n                      ⌜ ── ◇ ── TURNO: ♔ BLANCO ── ◇ ── ⌟");
         else System.out.println("\n                      ⌜ ── ◇ ── TURNO: ♚ NEGRO ── ◇ ── ⌟");
     }
 
@@ -111,12 +112,12 @@ public class ConsoleView {
     }
 
     public String readOriginSquare() {
-        System.out.print("                             ◇ Escribe [MENU] para volver ◇");
-        return readSquare(">> Escribe la casilla de origen: ");
+        System.out.println("                             ◇ Escribe [MENU] para volver ◇\n");
+        return readSquare("♦ Escribe la casilla de origen >> ");
     }
 
     public String readDestinationSquare() {
-        return readSquare(">> Escribe la casilla de destino: ");
+        return readSquare("♦ Escribe la casilla de destino >> ");
     }
 
     public String readSquare(String msj) {
@@ -156,6 +157,15 @@ public class ConsoleView {
 
     public boolean confirmOverwriteFile() {
         System.out.print("\n      ◇ Ya existe una partida con ese nombre. ¿Quieres sobrescribirla? [ S / N ] ◇\n >> ");
+        return yesOrNo();
+    }
+
+    public boolean confirmResign() {
+        System.out.print("\n ◇ ¿Quieres rendirte? [ S / N ] ◇\n >> ");
+        return yesOrNo();
+    }
+
+    private boolean yesOrNo() {
         while (true) {
             String option = sc.nextLine().trim().toUpperCase();
             if (option.matches("^[SN]$")) return option.equals("S");
@@ -163,6 +173,38 @@ public class ConsoleView {
         }
     }
 
+    public void finishGame(GameStatus gs) {
+        String text = " ";
 
+        switch (gs) {
+            case DRAW -> text = "   ♔  ⚔  EMPATE  ⚔  ♚";
+            case BLACK_WINS -> text = "¡ VICTORIA PARA EL NEGRO !\n";
+            case WHITE_WINS -> text = "¡ VICTORIA PARA EL BLANCO !\n";
+        }
+
+        System.out.print("   ⌜ ─────────────────── ◇ ─────────────────── ⌟\n");
+        System.out.print("                                " + text);
+        System.out.println("   ⌞ ─────────────────── ◇ ─────────────────── ⌟");
+    }
+
+    public void showCapturedPieces(ArrayList<Piece> pCaptured) {
+        if (pCaptured.isEmpty()) return;
+
+        ArrayList<Piece> whitePieces = new ArrayList<>();
+        ArrayList<Piece> blackPieces = new ArrayList<>();
+
+        for (Piece piece : pCaptured) {
+            if (piece.getColor() == Color.WHITE) whitePieces.add(piece);
+            else blackPieces.add(piece);
+        }
+
+        System.out.print("CAPTURAS: ");
+
+        for (Piece piece : whitePieces) System.out.print(piece.getType().getSymbol(Color.WHITE) + " ");
+
+        System.out.print("| ");
+
+        for (Piece piece : blackPieces) System.out.print(piece.getType().getSymbol(Color.BLACK) + " ");
+    }
 }
 

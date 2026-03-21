@@ -79,7 +79,7 @@ public class GamePersistent {
                 };
                 b.getSquare(col, row).setPiece(piece);
             }
-            return new Game(b, status, turn);
+            return new Game(b, status, turn, null); // Todo
         }
     }
 }
