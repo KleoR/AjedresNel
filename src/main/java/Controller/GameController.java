@@ -6,6 +6,7 @@ import Model.Enum.GameStatus;
 import Model.Enum.Row;
 import Model.Game;
 import Model.Piece;
+import Model.Pieces.King;
 import Model.Square;
 import View.ConsoleView;
 
@@ -31,50 +32,7 @@ public class GameController {
         showBoard();
     }
 
-    public boolean movePiece() {
-        String s = view.readOriginSquare();
-        if (s.equals("MENU")) return false;
-
-        Square originSquare = squareFromString(s);
-        Piece originPiece = originSquare.getPiece();
-
-        if (originPiece == null) {
-            view.showError("No hay hay que mover.");
-            return true;
-        }
-
-        if (game.getTurn() != originPiece.getColor()) {
-            view.showError("No puedes mover una pieza enemiga.");
-            return true;
-        }
-
-        Square destinationSquare = squareFromString(view.readDestinationSquare());
-
-        if (originSquare == destinationSquare) {
-            view.showError("La casilla de destino es la misma que la de origen. Vuelva a introducir las casillas.");
-            return true;
-        }
-
-        ArrayList<Square> legalMoves = originPiece.getValidMovements();
-
-        if (!legalMoves.contains(destinationSquare)) {
-            view.showError("No es un movimiento legal.");
-            return true;
-        }
-
-        Piece destPiece = destinationSquare.getPiece();
-
-        if (destPiece != null){
-            game.addCapturedPiece(destPiece);
-        }
-
-        destinationSquare.setPiece(originPiece);
-        originSquare.setPiece(null);
-
-        game.passTurn();
-        return true;
-    }
-
+    // -----------------------------  UTILS --------------------------
 
     public Square squareFromString(String square) {
         char column = square.charAt(0);
@@ -85,6 +43,138 @@ public class GameController {
 
         return game.getBoard().getSquare(col, row);
     }
+
+
+    // ----------------------------- MOVE PIECE --------------------------
+
+    public boolean movePiece() {
+        String originInput = view.readOriginSquare();
+        if (originInput.equals("MENU")) return false;
+
+        Square originSquare = squareFromString(originInput);
+        Piece originPiece = originSquare.getPiece();
+
+        if (!isValidOrigin(originPiece)) return true;
+
+        Square destinationSquare = squareFromString(view.readDestinationSquare());
+        if (!isValidDestination(originSquare, destinationSquare, originPiece)) return true;
+
+        executeMove(originSquare, destinationSquare, originPiece);
+        return checkGameStateAfterMove();
+    }
+
+    private void executeMove(Square originSquare, Square destinationSquare, Piece originPiece) {
+        Piece destPiece = destinationSquare.getPiece();
+
+        if (destPiece != null) game.addCapturedPiece(destPiece);
+
+        destinationSquare.setPiece(originPiece);
+        originSquare.setPiece(null);
+        game.passTurn();
+    }
+
+    private boolean isValidOrigin(Piece originPiece) {
+        if (originPiece == null) {
+            view.showError("No hay pieza que mover.");
+            return false;
+        }
+
+        if (game.getTurn() != originPiece.getColor()) {
+            view.showError("No puedes mover una pieza enemiga.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isValidDestination(Square originSquare, Square destinationSquare, Piece originPiece) {
+        if (originSquare == destinationSquare) {
+            view.showError("La casilla de destino es la misma que la de origen. Vuelva a introducir las casillas.");
+            return false;
+        }
+
+        ArrayList<Square> legalMoves = originPiece.getValidMovements();
+
+        if (!legalMoves.contains(destinationSquare)) {
+            view.showError("No es un movimiento legal.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkGameStateAfterMove() {
+        King enemyKing = King.findKing(game.getTurn(), game.getBoard());
+
+        assert enemyKing != null;
+        if (enemyKing.isInCheck()) {
+            if (!enemyKing.hasLegalMoves()) {
+                GameStatus status = game.getTurn() == Color.WHITE ? GameStatus.BLACK_WINS : GameStatus.WHITE_WINS;
+                game.setStatus(status);
+                view.finishGame(status);
+                view.showCheckMate(game.getTurn());
+                return false;
+
+            } else view.showCheck(game.getTurn());
+        }
+        return true;
+    }
+
+    private ArrayList<Square> getLegalMoves(Piece piece) { //Todo
+        return null;
+    }
+
+    // ----------------------------- RESIGN --------------------------
+
+    public boolean resignGame() {
+        if (!view.confirmResign()) return false;
+
+        if (game.getTurn() == Color.WHITE) game.setStatus(GameStatus.BLACK_WINS);
+        else game.setStatus(GameStatus.WHITE_WINS);
+
+        view.showInfo("Los " + game.getTurn().name() + " se han rendido.");
+        view.finishGame(game.getStatus());
+
+        return true;
+    }
+
+    // ----------------------------- DRAW --------------------------
+
+    public boolean offerDraw() {
+        if (!view.confirmDrawOffer()) return false;
+
+        if (!view.acceptDrawOffer()) {
+            view.showInfo("El rival NO acepta las tablas");
+            return false;
+        }
+
+        game.setStatus(GameStatus.DRAW);
+        view.finishGame(game.getStatus());
+
+        return true;
+    }
+
+    public boolean rule50Draw(){
+        //TODO
+        return true;
+    }
+
+    public boolean copyMovesDraw(){
+        //TODO
+        return true;
+    }
+
+    public boolean stalemateDraw(){
+        //TODO
+        return true;
+    }
+
+    public boolean insufficientMaterialDraw(){
+        //TODO
+        return true;
+    }
+
+    // ----------------------------- GAME PERSISTENT --------------------------
 
     public void saveGame() {
         if (game == null) {
@@ -128,18 +218,4 @@ public class GameController {
             return false;
         }
     }
-
-    public boolean resignGame() {
-        if (!view.confirmResign()) return false;
-
-        if (game.getTurn() == Color.WHITE) game.setStatus(GameStatus.BLACK_WINS);
-        else game.setStatus(GameStatus.WHITE_WINS);
-
-        view.showInfo("Los " + game.getTurn().name() + " se han rendido.");
-        view.finishGame(game.getStatus());
-
-        return true;
-    }
-
-
 }

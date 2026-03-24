@@ -12,7 +12,7 @@ public class Game {
     private ArrayList<Piece> capturedPieces;
 
     public Game() {
-        this.board = new Board(false);
+        this.board = new Board(false, "");
         this.status = GameStatus.IN_PROGRESS;
         this.turn = Color.WHITE;
         this.capturedPieces = new ArrayList<Piece>();

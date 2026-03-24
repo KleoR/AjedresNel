@@ -29,6 +29,12 @@ public class GamePersistent {
             bw.newLine();
             bw.write(game.getStatus().name());
             bw.newLine();
+
+            for (Piece piece : game.getCapturedPieces()){
+                bw.write(piece.getType().name() + " " + piece.getColor().name());
+                bw.newLine();
+            }
+
             for (int row = 0; row < 8; row++) {
                 for (int col = 0; col < 8; col++) {
                     Square square = game.getBoard().getSquare(col, row);

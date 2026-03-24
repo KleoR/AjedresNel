@@ -2,6 +2,7 @@ package Controller;
 
 import Controller.Enum.GameMenuOption;
 import Controller.Enum.MainMenuOption;
+import Model.Enum.GameStatus;
 import View.ConsoleView;
 
 public class MenuController {
@@ -45,7 +46,7 @@ public class MenuController {
                     if (gameController.resignGame()) return;
                     break;
                 case DRAW:
-                    //Todo
+                    if (gameController.offerDraw()) return;
                     break;
                 case SAVE_GAME:
                     gameController.saveGame();

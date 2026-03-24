@@ -165,6 +165,15 @@ public class ConsoleView {
         return yesOrNo();
     }
 
+    public boolean confirmDrawOffer() {
+        System.out.print("\n ◇ ¿Quieres proponer tablas? [ S / N ] ◇\n >> ");
+        return yesOrNo();
+    }
+    public boolean acceptDrawOffer() {
+        System.out.print("\n ◇ EL otro jugador a propuesto tablas ¿Quieres aceptarlas? [ S / N ] ◇\n >> ");
+        return yesOrNo();
+    }
+
     private boolean yesOrNo() {
         while (true) {
             String option = sc.nextLine().trim().toUpperCase();
@@ -184,7 +193,7 @@ public class ConsoleView {
 
         System.out.print("   ⌜ ─────────────────── ◇ ─────────────────── ⌟\n");
         System.out.print("                                " + text);
-        System.out.println("   ⌞ ─────────────────── ◇ ─────────────────── ⌟");
+        System.out.print("   ⌞ ─────────────────── ◇ ─────────────────── ⌟\n");
     }
 
     public void showCapturedPieces(ArrayList<Piece> pCaptured) {
@@ -205,6 +214,14 @@ public class ConsoleView {
         System.out.print("| ");
 
         for (Piece piece : blackPieces) System.out.print(piece.getType().getSymbol(Color.BLACK) + " ");
+    }
+
+    public void showCheck(Color color){
+        System.out.println("EL rey " + color.name() + "esta en Jaque.");
+    }
+
+    public void showCheckMate(Color color){
+        System.out.println("EL rey " + color.name() + "esta en JaqueMate.");
     }
 }
 

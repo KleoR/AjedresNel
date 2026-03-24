@@ -42,4 +42,39 @@ public class King extends Piece {
 
         return validMoves;
     }
+
+    public boolean isInCheck() {
+        Square kingSquare = this.getSquare();
+        Color opponent = this.getColor() == Color.WHITE ? Color.BLACK : Color.WHITE;
+
+        for (int col = 0; col < 8; col++) {
+            for (int row = 0; row < 8; row++) {
+                Piece piece = board.getSquare(col, row).getPiece();
+
+                if (piece == null) continue;
+                if (piece.getColor() == opponent && piece.getValidMovements().contains(kingSquare))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public static King findKing(Color color, Board board) {
+
+        for (int col = 0; col < 8; col++) {
+            for (int row = 0; row < 8; row++) {
+                Piece piece = board.getSquare(col, row).getPiece();
+
+                if (piece instanceof King king && king.getColor() == color)
+                    return king;
+            }
+        }
+
+        return null;
+    }
+
+    public boolean hasLegalMoves(){
+        return true;
+    }
+
 }
