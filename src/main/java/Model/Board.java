@@ -33,7 +33,7 @@ public class Board {
         for (int i = 0; i < 8; i++) squares[i][1].setPiece(new Pawn(Color.WHITE, this));
 
         squares[0][7].setPiece(new Rook(Color.BLACK, this));
-        squares[1][7].setPiece(new Knight(Color.BLACK, this));
+        squares[4][4].setPiece(new Knight(Color.BLACK, this));
         squares[2][7].setPiece(new Bishop(Color.BLACK, this));
         squares[3][7].setPiece(new Queen(Color.BLACK, this));
         squares[4][5].setPiece(new King(Color.BLACK, this));

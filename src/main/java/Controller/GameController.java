@@ -59,6 +59,7 @@ public class GameController {
         Square destinationSquare = squareFromString(view.readDestinationSquare());
         if (!isValidDestination(originSquare, destinationSquare, originPiece)) return true;
 
+
         executeMove(originSquare, destinationSquare, originPiece);
         return checkGameStateAfterMove();
     }
@@ -93,7 +94,7 @@ public class GameController {
             return false;
         }
 
-        ArrayList<Square> legalMoves = originPiece.getValidMovements();
+        ArrayList<Square> legalMoves = getLegalMoves(originPiece);
 
         if (!legalMoves.contains(destinationSquare)) {
             view.showError("No es un movimiento legal.");
@@ -102,6 +103,8 @@ public class GameController {
 
         return true;
     }
+
+    //
 
     private boolean checkGameStateAfterMove() {
         King enemyKing = King.findKing(game.getTurn(), game.getBoard());
@@ -121,7 +124,24 @@ public class GameController {
     }
 
     private ArrayList<Square> getLegalMoves(Piece piece) { //Todo
-        return null;
+        ArrayList<Square> legalMoves = new ArrayList<>();
+
+        Square originSquare = piece.getSquare();
+        for (Square destSquare : piece.getValidMovements()) {
+            Piece capturedPiece = destSquare.getPiece();
+
+            originSquare.setPiece(null);
+            destSquare.setPiece(piece);
+
+            King king = King.findKing(piece.getColor(), game.getBoard());
+            boolean kingInCheck = king != null && king.isInCheck();
+
+            destSquare.setPiece(capturedPiece);
+            originSquare.setPiece(piece);
+
+            if (!kingInCheck) legalMoves.add(destSquare);
+        }
+        return legalMoves;
     }
 
     // ----------------------------- RESIGN --------------------------
@@ -184,7 +204,7 @@ public class GameController {
 
         String fileName = view.readFileName();
 
-        if (GamePersistent.gameExist(fileName)) {
+        if (GamePersistent.gameExists(fileName)) {
             if (view.confirmOverwriteFile()) view.showInfo("El archivo [ " + fileName + " ] sera sobrescrito");
             else {
                 view.showInfo("Vuelve a guardar con otro nombre.");
@@ -203,7 +223,7 @@ public class GameController {
     public boolean loadGame() {
         String fileName = view.readFileName();
 
-        if (!GamePersistent.gameExist(fileName)) {
+        if (!GamePersistent.gameExists(fileName)) {
             view.showError("No existe ningún juego con el nombre [ " + fileName + " ].");
             return false;
         }

@@ -73,8 +73,31 @@ public class King extends Piece {
         return null;
     }
 
-    public boolean hasLegalMoves(){
-        return true;
+    public boolean hasLegalMoves() {
+
+        for (int col = 0; col < 8; col++) {
+            for (int row = 0; row < 8; row++) {
+                Piece piece = board.getSquare(col, row).getPiece();
+
+                if (piece == null || piece.getColor() != getColor()) continue;
+
+                Square originSquare = piece.getSquare();
+                for (Square destSquare : piece.getValidMovements()) {
+                    // Simular movement
+                    Piece capturedPiece = destSquare.getPiece();
+                    originSquare.setPiece(null);
+                    destSquare.setPiece(piece);
+                    boolean stillInCheck = isInCheck();
+
+                    destSquare.setPiece(capturedPiece);
+                    originSquare.setPiece(piece);
+
+                    if (!stillInCheck) return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 }

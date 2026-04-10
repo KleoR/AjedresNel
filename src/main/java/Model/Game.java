@@ -9,7 +9,7 @@ public class Game {
     private final Board board;
     private GameStatus status;
     private Color turn;
-    private ArrayList<Piece> capturedPieces;
+    private final ArrayList<Piece> capturedPieces;
 
     public Game() {
         this.board = new Board(false, "");
@@ -26,7 +26,7 @@ public class Game {
     }
 
     public ArrayList<Piece> getCapturedPieces() {
-        return capturedPieces;
+        return capturedPieces == null ? new ArrayList<>() : capturedPieces;
     }
 
     public void addCapturedPiece(Piece piece){
