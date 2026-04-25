@@ -48,6 +48,20 @@ public class GameController {
         return game.getBoard().getSquare(col, row);
     }
 
+    private void boardSnapshot() {
+        StringBuilder image = new StringBuilder(game.getTurn().name());
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+
+                Piece piece = game.getBoard().getSquare(col, row).getPiece();
+                if (piece != null)
+                    image.append(col).append(row).append(piece.getType().name()).append(piece.getColor().name());
+            }
+        }
+        boardImages.add(image.toString());
+    }
+
     // ----------------------------- MOVE PIECE --------------------------
 
     public boolean movePiece() {
@@ -92,7 +106,7 @@ public class GameController {
         game.passTurn();
     }
 
-    private ArrayList<Square> getLegalMoves(Piece piece) { //Todo
+    private ArrayList<Square> getLegalMoves(Piece piece) {
         ArrayList<Square> legalMoves = new ArrayList<>();
 
         Square originSquare = piece.getSquare();
@@ -114,6 +128,12 @@ public class GameController {
     }
 
     // ----------------------------- VALIDATIONS -----------------------------
+
+    private boolean finishGameCheck() {
+        if (rule50Draw()) return false;
+        if (tripleRepetitionDraw()) return false;
+        return checkGameStateAfterMove();
+    }
 
     private boolean isValidOrigin(Piece originPiece) {
         if (originPiece == null) {
@@ -192,20 +212,6 @@ public class GameController {
         return true;
     }
 
-    private void boardSnapshot() {
-        StringBuilder image = new StringBuilder(game.getTurn().name());
-
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-
-                Piece piece = game.getBoard().getSquare(col, row).getPiece();
-                if (piece != null)
-                    image.append(col).append(row).append(piece.getType().name()).append(piece.getColor().name());
-            }
-        }
-        boardImages.add(image.toString());
-    }
-
     private boolean tripleRepetitionDraw() {
         for (String image1 : boardImages) {
             int rep = 0;
@@ -232,12 +238,6 @@ public class GameController {
             return true;
         }
         return false;
-    }
-
-    private boolean finishGameCheck() {
-        if (rule50Draw()) return true;
-        if (tripleRepetitionDraw()) return true;
-        return checkGameStateAfterMove();
     }
 
 

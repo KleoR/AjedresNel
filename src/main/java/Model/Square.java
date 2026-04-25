@@ -29,12 +29,7 @@ public class Square {
     }
 
     public void setPiece(Piece piece) {
-        if (this.piece == piece) return;
-
-        Piece oldPiece = this.piece;
         this.piece = piece;
-
-        if (oldPiece != null) oldPiece.setSquare(null);
         if (piece != null) piece.setSquare(this);
     }
 
