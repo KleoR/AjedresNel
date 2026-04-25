@@ -1,102 +1,46 @@
 package View;
 
+import Controller.Enum.GameMenuOption;
+import Controller.Enum.MainMenuOption;
 import Model.Board;
 import Model.Enum.Color;
 import Model.Enum.GameStatus;
 import Model.Piece;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class ConsoleView {
-    private final Scanner sc = new Scanner(System.in);
+    private final ConsoleInput input = new ConsoleInput(this);
+
+    public String trueColor(Color color) {
+        if (color == Color.WHITE) return "BLANCO";
+        else return "NEGRO";
+    }
+
+    // --------------------- SHOW ----------------------
 
     public void showTitle() {
-        System.out.println("""
-                
-                ◇ ────────────────────────────────────────── ◇
-                
-                               ▒▒┐        ▒┐▒▒▒┐▒▒▒┐  ▒▒▒┐  ▒▒▒┐ ▒▒▒▒┐
-                             ▒┌─▒┐      ▒│▒┌─┘▒┌─▒┐▒┌─▒┐▒┌─┘ └─▒┌┘
-                             ▒▒▒▒│      ▒│▒▒┐  ▒│  ▒│▒▒▒┌┘▒▒┐     ▒┌┘
-                             ▒┌─▒│▒    ▒│▒┌┘  ▒│  ▒│▒┌─▒┐▒┌┘   ▒┌┘
-                             ▒│  ▒│└▒▒┌┘▒▒▒┐▒▒▒┌┘▒│  ▒│▒▒▒┐▒▒▒▒┐
-                             └┘  └┘  └─┘  └──┘└──┘  └┘  └┘└──┘└───┘
-                
-                ◇ ──────────────── ◇ AJEDREZ V1.0 ◇ ──────────────── ◇
-                """);
-    }
-
-//    public void showTitle2() {
-//        System.out.println("""
-//                ◇ ────────────────────────────────────────── ◇
-//                            ______      _____  ________  _______   _______   ________  ________
-//                           /      \\    /     |/        |/       \\ /       \\ /        |/       |
-//                          /▒▒▒  |   ▒▒  |▒▒▒▒/ ▒▒▒   |▒▒▒   |▒▒▒▒/ ▒▒▒▒/
-//                          ▒    ▒ | __   ▒ |▒    |   ▒ |  ▒ |▒    ▒< ▒    |      /▒/
-//                          ▒▒▒▒ |/  |  ▒ |▒▒ /    ▒ |  ▒ |▒▒▒   |▒▒ /      /▒/
-//                          ▒ |  ▒ |▒ \\__▒ |▒ |_____ ▒ |__▒ |▒ |  ▒ |▒ |_____  /▒/____
-//                          ▒/   ▒ / ▒▒▒ / ▒▒▒▒ /▒▒▒ /  ▒ /  ▒/ ▒▒▒▒/  ▒▒▒▒/
-//
-//                ◇ ──────────────── ◇ AJEDREZ V1.0 ◇ ──────────────── ◇""");
-//        System.out.println("""
-//                ◇ ────────────────────────────────────────── ◇
-//
-//                        ▁▁▁▁           ▁▁    ▁▁▁▁▁▁    ▁▁▁▁▁▁      ▁▁▁▁▁▁      ▁▁▁▁▁▁     ▁▁▁▁▁▁▁▁
-//                      ▁|▄▀▄▀|▁        |▄▀|  |▄▀▄▀▄▀|  |▄▀▄▀▄▀|▁   |▄▀▄▀▄▀|▁   |▄▀▄▀▄▀|  |▀▄▀▄▀▄▀▄▀|
-//                     |▄▀|▁▁|▄▀|       |▄▀|  |▄▀|▔▔▔   |▄▀|▔▔|▄▀|  |▄▀|▔▔|▄▀|  |▄▀|▔▔▔     ▔▔▔|▄▀|▔
-//                     |▄▀▄▀▄▀▄▀|  ▁▁   |▄▀|  |▄▀▄▀|    |▄▀|  |▄▀|  |▄▀▄▀▄▀|▁   |▄▀▄▀|      ▁|▄▀|▔
-//                     |▄▀|▔▔|▄▀| |▄▀|  |▄▀|  |▄▀|▁▁▁   |▄▀|▁▁|▄▀|  |▄▀|▔▔|▄▀|  |▄▀|▁▁▁   ▁|▄▀|▁▁▁▁
-//                     |▄▀|  |▄▀|  ▔|▄▀▄▀|▔   |▄▀▄▀▄▀|  |▄▀▄▀▄▀|▔   |▄▀|  |▄▀|  |▄▀▄▀▄▀| |▄▀▄▀▄▀▄▀▄|
-//                      ▔▔    ▔▔     ▔▔▔▔      ▔▔▔▔▔▔    ▔▔▔▔▔▔      ▔▔    ▔▔    ▔▔▔▔▔▔   ▔▔▔▔▔▔▔▔▔
-//
-//                ◇ ──────────────── ◇ AJEDREZ V1.0 ◇ ──────────────── ◇""");
-//    }
-
-    public void showBoard(Board b) {
-        String sp = "                           ";
-        System.out.println("\n" + sp + " ◇  ┯━┯━┯━┯━┯━┯━┯  ◇");
-
-        for (int row = 7; row >= 0; row--) {
-            System.out.print(sp + (row + 1) + (row != 7 && row != 0 ? "┃" : "  "));
-            columnDraw(b, row);
-        }
-        System.out.println(sp + "   a   b   c   d   e   f   g   h\n");
-    }
-
-    public void columnDraw(Board b, int row) {
-        String sp = "                            ";
-        for (int col = 0; col < 8; col++) {
-            String piece = b.getSquare(col, row).toString();
-            System.out.print(piece + (col != 7 ? "│" : ""));
-        }
-
-        if (row != 0) System.out.println((row != 7 ? "┃ " : "") + "\n" + sp + "┠─┼─┼─┼─┼─┼─┼─┼─┨");
-        else System.out.println("\n" + sp + "◇  ┷━┷━┷━┷━┷━┷━┷  ◇");
-    }
-
-    public void showTurn(Color color) {
-        if (color == Color.WHITE) System.out.println("\n                      ⌜ ── ◇ ── TURNO: ♔ BLANCO ── ◇ ── ⌟");
-        else System.out.println("\n                      ⌜ ── ◇ ── TURNO: ♚ NEGRO ── ◇ ── ⌟");
+        System.out.println(GameMessage.GAME_TITLE.get());
     }
 
     public void showExit() {
-        System.out.print(
-                """
-                        
-                                    ┌───────────────────────────────┐
-                                    │ ♖   ♘   ♗    DESCONECTANDO DEL TABLERO...    ♗   ♘   ♖ │
-                                    └───────────────────────────────┘
-                                                         ◇ ¡Gracias por jugar! ◇
-                        """);
+        System.out.print(GameMessage.GAME_EXIT.get());
     }
 
-    public void showMainMenu() {
-        System.out.print("\n              ◇ ─ [1] CREAR PARTIDA · [2] CARGAR PARTIDA · [0] SALIR ─ ◇\n >> ");
+    public void showCheck(Color color) {
+        System.out.printf(GameMessage.GAME_CHECK.get(), trueColor(color));
     }
 
-    public void showGameMenu() {
-        System.out.print("\n◇ ─ [1] MOVER PIEZA · [2] RENDIRSE · [3] TABLAS · [4] GUARDAR PARTIDA · [0] VOLVER ─ ◇ \n >> ");
+    public void showCheckMate(Color color) {
+        System.out.printf(GameMessage.GAME_CHECKMATE.get(), trueColor(color));
+    }
+
+    public void showFinishGame(GameStatus gs) {
+        System.out.printf(GameMessage.GAME_FINISH.get(), gs.getMessage());
+    }
+
+    public void showTurn(Color color) {
+        System.out.printf(GameMessage.GAME_TURN.get(), trueColor(color));
     }
 
     public void showError(String mjs) {
@@ -111,90 +55,73 @@ public class ConsoleView {
         System.out.println("\n [!] INFO: " + mjs + " [!] \n");
     }
 
+    // --------------------- READ ----------------------
+
+    public void returnMenu(){
+        System.out.println("◇ Escribe [ MENU ] para volver al menu ◇ y [BACK] para reelegir origen ◇\n");
+    }
+
     public String readOriginSquare() {
-        System.out.println("                             ◇ Escribe [MENU] para volver ◇\n");
-        return readSquare("♦ Escribe la casilla de origen >> ");
+        return input.readSquare("♦ Escribe la casilla de origen >> ");
     }
 
     public String readDestinationSquare() {
-        return readSquare("♦ Escribe la casilla de destino >> ");
-    }
-
-    public String readSquare(String msj) {
-        while (true) {
-            System.out.print(msj);
-            String square = sc.nextLine().toUpperCase().trim();
-            if (square.equals("MENU")) return square;
-
-            if (square.matches("^[A-H][1-8]$")) return square;
-            showError("Casilla invalida. Vuelve a introducir la casilla. Escribe [ MENU ] para volver al menú.");
-        }
-    }
-
-    public int readInt(int max) {
-        while (true) {
-            if (!sc.hasNextInt()) {
-                showError("Numero invalido. Vuelve a introducir un numero.");
-                sc.nextLine();
-            } else {
-                int num = sc.nextInt();
-                sc.nextLine();
-                if (num >= 0 && num <= max) return num;
-                showError("Numero fuera de rango. Vuelve a introducir un numero.");
-            }
-        }
+        return input.readSquare("♦ Escribe la casilla de destino >> ");
     }
 
     public String readFileName() {
-        while (true) {
-            System.out.print("\n                  ◇ Escribe le nombre para el fichero de la partida ◇\n >> ");
-            String gameName = sc.nextLine().trim();
-
-            if (gameName.matches("^[A-Za-z0-9_-]{1,20}$")) return gameName;
-            showError("Formato de nombre no valido. Vuelva a introducirlo.");
-        }
+        return input.readFileName();
     }
+
+    // --------------------- CONFIRM -----------------------
 
     public boolean confirmOverwriteFile() {
         System.out.print("\n      ◇ Ya existe una partida con ese nombre. ¿Quieres sobrescribirla? [ S / N ] ◇\n >> ");
-        return yesOrNo();
+        return input.yesOrNo();
     }
 
     public boolean confirmResign() {
         System.out.print("\n ◇ ¿Quieres rendirte? [ S / N ] ◇\n >> ");
-        return yesOrNo();
+        return input.yesOrNo();
     }
 
     public boolean confirmDrawOffer() {
         System.out.print("\n ◇ ¿Quieres proponer tablas? [ S / N ] ◇\n >> ");
-        return yesOrNo();
+        return input.yesOrNo();
     }
+
     public boolean acceptDrawOffer() {
         System.out.print("\n ◇ EL otro jugador a propuesto tablas ¿Quieres aceptarlas? [ S / N ] ◇\n >> ");
-        return yesOrNo();
+        return input.yesOrNo();
     }
 
-    private boolean yesOrNo() {
-        while (true) {
-            String option = sc.nextLine().trim().toUpperCase();
-            if (option.matches("^[SN]$")) return option.equals("S");
-            showError("Opción invalida, tiene que se [ S ] para si y [ N ] para no.");
+    // ------------------------- GAME OPTIONS -------------------------------
+
+    public GameMenuOption getGameMenuOption() {
+        System.out.print(GameMessage.GAME_GAME_MENU.get());
+        return GameMenuOption.fromIndex(input.readInt(GameMenuOption.values().length - 1));
+    }
+
+    public MainMenuOption getMainMenuOption() {
+        System.out.print(GameMessage.GAME_MAIN_MENU.get());
+        return MainMenuOption.fromIndex(input.readInt(MainMenuOption.values().length - 1));
+    }
+
+    // ------------------------------- TABLERO ----------------------
+    public void showBoard(Board b) {
+        System.out.printf("%n%27s◇ ━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━ ◇%n", "");
+
+        for (int row = 7; row >= 0; row--) {
+            System.out.printf("%25s" + "%d ┃ ", "", (row + 1));
+
+            for (int col = 0; col < 8; col++) System.out.print(b.getSquare(col, row).toString() + (col < 7 ? " │ " : " ┃"));
+            if (row > 0) System.out.printf("%n%27s┠───┼───┼───┼───┼───┼───┼───┼───┨%n", "");
         }
+
+        System.out.printf("%n%27s◇ ━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━ ◇ ", "");
+        System.out.printf("%n%27s  a   b   c   d   e   f   g   h%n", "");
     }
 
-    public void finishGame(GameStatus gs) {
-        String text = " ";
-
-        switch (gs) {
-            case DRAW -> text = "   ♔  ⚔  EMPATE  ⚔  ♚";
-            case BLACK_WINS -> text = "¡ VICTORIA PARA EL NEGRO !\n";
-            case WHITE_WINS -> text = "¡ VICTORIA PARA EL BLANCO !\n";
-        }
-
-        System.out.print("   ⌜ ─────────────────── ◇ ─────────────────── ⌟\n");
-        System.out.print("                                " + text);
-        System.out.print("   ⌞ ─────────────────── ◇ ─────────────────── ⌟\n");
-    }
 
     public void showCapturedPieces(ArrayList<Piece> pCaptured) {
         if (pCaptured.isEmpty()) return;
@@ -216,12 +143,5 @@ public class ConsoleView {
         for (Piece piece : blackPieces) System.out.print(piece.getType().getSymbol(Color.BLACK) + " ");
     }
 
-    public void showCheck(Color color){
-        System.out.println("EL rey " + color.name() + "esta en Jaque.");
-    }
-
-    public void showCheckMate(Color color){
-        System.out.println("EL rey " + color.name() + "esta en JaqueMate.");
-    }
 }
 

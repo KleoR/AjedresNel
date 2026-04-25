@@ -7,6 +7,7 @@ import Model.Enum.Row;
 import Model.Game;
 import Model.Piece;
 import Model.Pieces.King;
+import Model.Pieces.Pawn;
 import Model.Square;
 import View.ConsoleView;
 
@@ -16,9 +17,12 @@ import java.util.ArrayList;
 public class GameController {
     private final ConsoleView view;
     private Game game;
+    private int moveCounter;
+    ArrayList<String> boardImages = new ArrayList<>();
 
     public GameController(ConsoleView view) {
         this.view = view;
+        this.moveCounter = 0;
     }
 
     public void showBoard() {
@@ -35,44 +39,81 @@ public class GameController {
     // -----------------------------  UTILS --------------------------
 
     public Square squareFromString(String square) {
-        char column = square.charAt(0);
-        char raw = square.charAt(1);
+        char colChar = square.charAt(0);
+        char rowChar = square.charAt(1);
 
-        int col = Column.valueOf(String.valueOf(column)).getIndex();
-        int row = Row.rowFromIndex(Character.getNumericValue(raw) - 1).getIndex();
+        int col = Column.valueOf(String.valueOf(colChar)).getIndex();
+        int row = Row.rowFromIndex(Character.getNumericValue(rowChar) - 1).getIndex();
 
         return game.getBoard().getSquare(col, row);
     }
 
-
     // ----------------------------- MOVE PIECE --------------------------
 
     public boolean movePiece() {
-        String originInput = view.readOriginSquare();
-        if (originInput.equals("MENU")) return false;
+        view.returnMenu();
 
-        Square originSquare = squareFromString(originInput);
-        Piece originPiece = originSquare.getPiece();
+        while (true) {
+            String originInput = view.readOriginSquare();
+            if (originInput.equals("MENU")) return false;
 
-        if (!isValidOrigin(originPiece)) return true;
+            Square originSquare = squareFromString(originInput);
+            Piece originPiece = originSquare.getPiece();
 
-        Square destinationSquare = squareFromString(view.readDestinationSquare());
-        if (!isValidDestination(originSquare, destinationSquare, originPiece)) return true;
+            if (!isValidOrigin(originPiece)) continue;
 
 
-        executeMove(originSquare, destinationSquare, originPiece);
-        return checkGameStateAfterMove();
+            while (true) {
+                String destInput = view.readDestinationSquare();
+                if (destInput.equals("MENU")) return false;
+                else if (destInput.equals("BACK")) break;
+
+                Square destinationSquare = squareFromString(destInput);
+                if (!isValidDestination(originSquare, destinationSquare, originPiece)) continue;
+
+                executeMove(originSquare, destinationSquare, originPiece);
+                return finishGameCheck();
+            }
+        }
     }
 
     private void executeMove(Square originSquare, Square destinationSquare, Piece originPiece) {
         Piece destPiece = destinationSquare.getPiece();
 
-        if (destPiece != null) game.addCapturedPiece(destPiece);
+        if (destPiece != null) {
+            game.addCapturedPiece(destPiece);
+            this.moveCounter = -1;
+        } else if (originPiece instanceof Pawn) this.moveCounter = -1;
 
         destinationSquare.setPiece(originPiece);
         originSquare.setPiece(null);
+
+        boardSnapshot();
         game.passTurn();
     }
+
+    private ArrayList<Square> getLegalMoves(Piece piece) { //Todo
+        ArrayList<Square> legalMoves = new ArrayList<>();
+
+        Square originSquare = piece.getSquare();
+        for (Square destSquare : piece.getValidMovements()) {
+            Piece capturedPiece = destSquare.getPiece();
+
+            originSquare.setPiece(null);
+            destSquare.setPiece(piece);
+
+            King king = King.findKing(piece.getColor(), game.getBoard());
+            boolean kingInCheck = king != null && king.isInCheck();
+
+            destSquare.setPiece(capturedPiece);
+            originSquare.setPiece(piece);
+
+            if (!kingInCheck) legalMoves.add(destSquare);
+        }
+        return legalMoves;
+    }
+
+    // ----------------------------- VALIDATIONS -----------------------------
 
     private boolean isValidOrigin(Piece originPiece) {
         if (originPiece == null) {
@@ -104,44 +145,21 @@ public class GameController {
         return true;
     }
 
-    //
-
     private boolean checkGameStateAfterMove() {
         King enemyKing = King.findKing(game.getTurn(), game.getBoard());
 
         assert enemyKing != null;
         if (enemyKing.isInCheck()) {
-            if (!enemyKing.hasLegalMoves()) {
+            if (enemyKing.hasLegalMoves()) view.showCheck(game.getTurn());
+            else {
                 GameStatus status = game.getTurn() == Color.WHITE ? GameStatus.BLACK_WINS : GameStatus.WHITE_WINS;
                 game.setStatus(status);
-                view.finishGame(status);
+                view.showFinishGame(status);
                 view.showCheckMate(game.getTurn());
                 return false;
-
-            } else view.showCheck(game.getTurn());
+            }
         }
         return true;
-    }
-
-    private ArrayList<Square> getLegalMoves(Piece piece) { //Todo
-        ArrayList<Square> legalMoves = new ArrayList<>();
-
-        Square originSquare = piece.getSquare();
-        for (Square destSquare : piece.getValidMovements()) {
-            Piece capturedPiece = destSquare.getPiece();
-
-            originSquare.setPiece(null);
-            destSquare.setPiece(piece);
-
-            King king = King.findKing(piece.getColor(), game.getBoard());
-            boolean kingInCheck = king != null && king.isInCheck();
-
-            destSquare.setPiece(capturedPiece);
-            originSquare.setPiece(piece);
-
-            if (!kingInCheck) legalMoves.add(destSquare);
-        }
-        return legalMoves;
     }
 
     // ----------------------------- RESIGN --------------------------
@@ -153,7 +171,7 @@ public class GameController {
         else game.setStatus(GameStatus.WHITE_WINS);
 
         view.showInfo("Los " + game.getTurn().name() + " se han rendido.");
-        view.finishGame(game.getStatus());
+        view.showFinishGame(game.getStatus());
 
         return true;
     }
@@ -169,30 +187,69 @@ public class GameController {
         }
 
         game.setStatus(GameStatus.DRAW);
-        view.finishGame(game.getStatus());
+        view.showFinishGame(game.getStatus());
 
         return true;
     }
 
-    public boolean rule50Draw(){
-        //TODO
-        return true;
+    private void boardSnapshot() {
+        StringBuilder image = new StringBuilder(game.getTurn().name());
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+
+                Piece piece = game.getBoard().getSquare(col, row).getPiece();
+                if (piece != null)
+                    image.append(col).append(row).append(piece.getType().name()).append(piece.getColor().name());
+            }
+        }
+        boardImages.add(image.toString());
     }
 
-    public boolean copyMovesDraw(){
-        //TODO
-        return true;
+    private boolean tripleRepetitionDraw() {
+        for (String image1 : boardImages) {
+            int rep = 0;
+
+            for (String image2 : boardImages) {
+                if (image1.equals(image2)) rep++;
+            }
+
+            if (rep >= 3) {
+                game.setStatus(GameStatus.DRAW);
+                view.showFinishGame(game.getStatus());
+                return true;
+            }
+        }
+        return false;
     }
 
-    public boolean stalemateDraw(){
-        //TODO
-        return true;
+    private boolean rule50Draw() {
+        this.moveCounter++;
+
+        if (this.moveCounter >= 100) {
+            game.setStatus(GameStatus.DRAW);
+            view.showFinishGame(game.getStatus());
+            return true;
+        }
+        return false;
     }
 
-    public boolean insufficientMaterialDraw(){
-        //TODO
-        return true;
+    private boolean finishGameCheck() {
+        if (rule50Draw()) return true;
+        if (tripleRepetitionDraw()) return true;
+        return checkGameStateAfterMove();
     }
+
+
+//    private boolean stalemateDraw() {
+//        //TODO
+//        return true;
+//    }
+//
+//    public boolean insufficientMaterialDraw() {
+//        //TODO
+//        return true;
+//    }
 
     // ----------------------------- GAME PERSISTENT --------------------------
 
@@ -215,6 +272,7 @@ public class GameController {
         try {
             GamePersistent.save(game, fileName);
             view.showSuccess("Partida [ " + fileName + " ] guardad correctamente.");
+
         } catch (IOException e) {
             view.showError("Error al guardar la partida");
         }
@@ -233,6 +291,7 @@ public class GameController {
             view.showSuccess("La partida [ " + fileName + " ] ha sido cargada con éxito.");
             showBoard();
             return true;
+
         } catch (IOException e) {
             view.showError("Error al cargar la partida");
             return false;

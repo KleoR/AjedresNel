@@ -65,4 +65,14 @@ public class Pawn extends Piece {
             }
         }
     }
+
+    // TODO - COMER AL PASO
+    /*
+    El peón enemigo debe haber avanzado dos casillas en su movimiento inmediato anterior.
+    El peón atacante debe encontrarse en la quinta fila (para blancas) o cuarta fila (para negras), justo al lado del peón enemigo.
+    La captura debe realizarse inmediatamente en la siguiente jugada; si se juega otra pieza, la oportunidad se pierde para siempre.
+     */
+    private void addPassantCapture(int row, int forward, int col, ArrayList<Square> validMoves, int startRow){
+
+    }
 }

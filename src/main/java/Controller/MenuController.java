@@ -1,8 +1,5 @@
 package Controller;
 
-import Controller.Enum.GameMenuOption;
-import Controller.Enum.MainMenuOption;
-import Model.Enum.GameStatus;
 import View.ConsoleView;
 
 public class MenuController {
@@ -17,8 +14,7 @@ public class MenuController {
     public void showMainMenu() {
         view.showTitle();
         while (true) {
-            view.showMainMenu();
-            switch (MainMenuOption.getMainMenuOption(view)) {
+            switch (view.getMainMenuOption()) {
                 case CREATE_GAME:
                     gameController.createNewGame();
                     showGameMenu();
@@ -35,12 +31,9 @@ public class MenuController {
 
     public void showGameMenu() {
         while (true) {
-            view.showGameMenu();
-            switch (GameMenuOption.getGameMenuOption(view)) {
+            switch (view.getGameMenuOption()) {
                 case MOVE_PIECE:
-                    while (gameController.movePiece()) {
-                        gameController.showBoard();
-                    }
+                    while (gameController.movePiece()) gameController.showBoard();
                     break;
                 case RESIGN:
                     if (gameController.resignGame()) return;
@@ -53,7 +46,6 @@ public class MenuController {
                     break;
                 case EXIT:
                     return;
-
             }
         }
     }

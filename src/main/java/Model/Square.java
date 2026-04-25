@@ -5,26 +5,15 @@ import Model.Enum.Column;
 import Model.Enum.Row;
 
 public class Square {
+    private final Color color;
     private final Column col;
     private final Row row;
-    private final Color color;
     private Piece piece;
 
     public Square(int col, int row) {
         this.col = Column.columnFromIndex(col);
         this.row = Row.rowFromIndex(row);
         this.color = Color.colorFromIndexes(this.col, this.row);
-    }
-
-    public Piece getPiece() {
-        return piece;
-    }
-
-    public void setPiece(Piece piece) {
-        if (this.piece != null && piece != null && piece != this.piece)
-            this.piece.setSquare(null); //Todo Pendiente de entender, pero funcionar funciona
-        this.piece = piece;
-        if (piece != null) piece.setSquare(this);
     }
 
     public int getColumnFromIndex() {
@@ -35,14 +24,23 @@ public class Square {
         return row.getIndex();
     }
 
-    private String squareColor() {
-        if (this.color == Color.WHITE) return "░";
-        else return "  ";
+    public Piece getPiece() {
+        return piece;
+    }
+
+    public void setPiece(Piece piece) {
+        if (this.piece == piece) return;
+
+        Piece oldPiece = this.piece;
+        this.piece = piece;
+
+        if (oldPiece != null) oldPiece.setSquare(null);
+        if (piece != null) piece.setSquare(this);
     }
 
     @Override
     public String toString() {
-        if (this.piece == null) return squareColor();
-        else return piece.toString();
+        if (this.piece != null) return piece.toString();
+        return (this.color == Color.WHITE) ? "░" : " ";
     }
 }

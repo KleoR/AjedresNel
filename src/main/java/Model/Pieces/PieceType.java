@@ -3,12 +3,12 @@ package Model.Pieces;
 import Model.Enum.Color;
 
 public enum PieceType {
-    PAWN('♟', '♙'),
-    BISHOP('♝', '♗'),
-    KING('♚', '♔'),
-    KNIGHT('♞', '♘'),
-    QUEEN('♛', '♕'),
-    ROOK('♜', '♖');
+    PAWN(   '♙', '\uED64'),
+    BISHOP( '♗', '\uED60'),
+    KING(   '♔', '\uED62'),
+    KNIGHT( '♘', '\uED63'),
+    QUEEN(  '♕', '\uED65'),
+    ROOK(   '♖', '\uED66');
 
     private final char whiteSymbol;
     private final char blackSymbol;

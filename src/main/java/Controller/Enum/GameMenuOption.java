@@ -15,11 +15,7 @@ public enum GameMenuOption {
         this.index = index;
     }
 
-    public static GameMenuOption getGameMenuOption(ConsoleView view) {
-        return GameMenuOption.gameOptionFromIndex(view.readInt(GameMenuOption.values().length));
-    }
-
-    public static GameMenuOption gameOptionFromIndex(int index) {
+    public static GameMenuOption fromIndex(int index) {
         for (GameMenuOption gm : values()) if (gm.index == index) return gm;
         throw new IllegalArgumentException("Opción Invalida");
     }
