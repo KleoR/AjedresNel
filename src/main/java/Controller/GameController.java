@@ -131,6 +131,7 @@ public class GameController {
 
     private boolean finishGameCheck() {
         if (rule50Draw()) return false;
+
         if (tripleRepetitionDraw()) return false;
         return checkGameStateAfterMove();
     }
